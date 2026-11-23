@@ -21,6 +21,7 @@
 #include "GTAplayer.h"
 #include "..\Menu\Menu.h"
 #include "..\Menu\MenuConfig.h"
+#include "UnicodeTextRenderer.h"
 
 #include <string>
 #include <sstream>
@@ -180,6 +181,7 @@ namespace Game
 		// Game - Print/draw
 		void setupdraw()
 		{
+			UnicodeTextRenderer::SetStyle(Vector2(0.4f, 0.4f), false, false, false, RGBA(255, 255, 255, 255));
 			SET_TEXT_FONT(0);
 			SET_TEXT_SCALE(0.4f, 0.4f);
 			SET_TEXT_COLOUR(255, 255, 255, 255);
@@ -191,6 +193,7 @@ namespace Game
 		}
 		void SetupDraw(INT8 font, const Vector2& scale, bool centred, bool right_justified, bool outline, RGBA colour, Vector2 wrap)
 		{
+			UnicodeTextRenderer::SetStyle(scale, centred, right_justified, outline, colour);
 			SET_TEXT_FONT(font);
 			SET_TEXT_SCALE(scale.x, scale.y);
 			SET_TEXT_COLOUR(colour.R, colour.G, colour.B, colour.A);
@@ -203,6 +206,7 @@ namespace Game
 		}
 		void drawstring(const std::string& s, float X, float Y)
 		{
+			if (UnicodeTextRenderer::DrawIfNeeded(s, X, Y)) return;
 			if (s.length() < 100)
 			{
 				BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
@@ -218,6 +222,7 @@ namespace Game
 		void DrawString(std::ostream& os, float X, float Y)
 		{
 			const std::string& s = dynamic_cast<std::ostringstream&>(os).str();
+			if (UnicodeTextRenderer::DrawIfNeeded(s, X, Y)) return;
 			if (s.length() < 100)
 			{
 				BEGIN_TEXT_COMMAND_DISPLAY_TEXT("STRING");
@@ -232,6 +237,7 @@ namespace Game
 		}
 		void drawstringGXT(const std::string& s, float X, float Y)
 		{
+			if (UnicodeTextRenderer::DrawIfNeeded(s, X, Y)) return;
 			if (DOES_TEXT_LABEL_EXIST(s.c_str()))
 			{
 				BEGIN_TEXT_COMMAND_DISPLAY_TEXT(s.c_str());
@@ -256,6 +262,7 @@ namespace Game
 		void drawstringGXT(std::ostream& os, float X, float Y)
 		{
 			const std::string& s = dynamic_cast<std::ostringstream&>(os).str();
+			if (UnicodeTextRenderer::DrawIfNeeded(s, X, Y)) return;
 			char* text = (char*)s.c_str();
 
 			if (DOES_TEXT_LABEL_EXIST(text))

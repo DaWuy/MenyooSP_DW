@@ -48,7 +48,7 @@ project "Menyoo"
         "Solution/generated",
     }
 
-    links { "ScriptHookV", "d3d11", "d3dcompiler", "dxgi", "Psapi" }
+    links { "ScriptHookV", "d3d11", "d3dcompiler", "dxgi", "Psapi", "gdiplus" }
 
     libdirs {
         "Solution/external/ScriptHookV/SDK/lib",
