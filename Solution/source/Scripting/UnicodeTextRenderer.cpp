@@ -191,8 +191,10 @@ namespace UnicodeTextRenderer
 
 		bool RenderPng(FontRuntime& runtime, const std::wstring& text, const std::wstring& path, int& width, int& height)
 		{
-			constexpr float rasterFontSize = 64.0f;
-			constexpr float padding = 8.0f;
+			// Render well above the final on-screen size so ScriptHookV can
+			// downsample the texture cleanly instead of magnifying small glyphs.
+			constexpr float rasterFontSize = 160.0f;
+			constexpr float padding = 16.0f;
 
 			Gdiplus::Font font(&runtime.Family(), rasterFontSize, Gdiplus::FontStyleRegular, Gdiplus::UnitPixel);
 			if (font.GetLastStatus() != Gdiplus::Ok) return false;
@@ -235,7 +237,9 @@ namespace UnicodeTextRenderer
 			if (wideText.empty()) return nullptr;
 
 			std::ostringstream name;
-			name << std::hex << std::setfill('0') << std::setw(16) << HashText(displayText) << ".png";
+			// Prefix changes whenever raster settings change, preventing an old
+			// runtime cache from being reused with different dimensions.
+			name << "v2_" << std::hex << std::setfill('0') << std::setw(16) << HashText(displayText) << ".png";
 			const std::filesystem::path pngPath = std::filesystem::path(runtime.CacheDirectory()) / name.str();
 
 			CachedTexture texture;
@@ -276,7 +280,7 @@ namespace UnicodeTextRenderer
 		if (!texture) return false;
 
 		const float aspect = GET_ASPECT_RATIO(false);
-		const float sizeY = (std::max)(0.012f, currentStyle.scaleY * 0.07f);
+		const float sizeY = (std::max)(0.009f, currentStyle.scaleY * 0.045f);
 		const float pixelAspect = static_cast<float>(texture->width) / static_cast<float>(texture->height);
 		const float sizeX = sizeY * pixelAspect / (aspect > 0.0f ? aspect : (16.0f / 9.0f));
 		const float centreX = currentStyle.centred ? 0.5f : (currentStyle.rightJustified ? 1.0f : 0.0f);
