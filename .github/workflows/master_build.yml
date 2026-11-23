@@ -70,6 +70,9 @@ jobs:
           submodules: recursive
           fetch-depth: 0
 
+      - name: Fetch upstream version tags
+        run: git fetch https://github.com/itsjustcurtis/MenyooSP.git "+refs/tags/*:refs/tags/*"
+
       - name: Generate solution with Premake
         run: Solution/external/premake/premake5.exe vs2022
 
