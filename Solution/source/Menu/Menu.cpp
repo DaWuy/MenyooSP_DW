@@ -20,7 +20,6 @@
 #include "..\Scripting\Game.h"
 #include "..\Scripting\GameplayCamera.h"
 #include "..\Scripting\ModelNames.h" // _vNeonColours
-#include "..\Scripting\UnicodeTextRenderer.h"
 #include "Routine.h" // (loop_hide_hud)
 #include "..\Misc\FreeCam.h"
 #include "Language.h"
@@ -1267,29 +1266,21 @@ void AddTitle(std::string text)
 	auto length = text.length();
 
 	FLOAT offset = 0;
-	float titleScale = 0.40f;
 
 	if (length < 15)
-	{
 		SET_TEXT_SCALE(0.75f, 0.75f);
-		titleScale = 0.75f;
-	}
 	else if (length < 19)
 	{
 		SET_TEXT_SCALE(0.62f, 0.62f);
-		titleScale = 0.62f;
 		offset = 0.006f;
 	}
 	else if (length < 23)
 	{
 		SET_TEXT_SCALE(0.51f, 0.51f);
-		titleScale = 0.51f;
 		offset = 0.011f;
 	}
 	else offset = 0.015f;//SET_TEXT_SCALE(0.40f, 0.40f);
 
-	UnicodeTextRenderer::SetStyle(Vector2(titleScale, titleScale), Menu::centerTitleText, false,
-		titletext.A > 0 && titletext.R > 240 && titletext.G > 240 && titletext.B > 240, titletext);
 	Game::Print::drawstringGXT(text, currentOptionY + menuPos.x, 0.1f + offset + menuPos.y);
 
 }
@@ -1333,10 +1324,7 @@ void AddOption(std::string text, bool& option_code_bool, void(&callback)(), int 
 		SET_TEXT_SCALE(0, 0.33f);
 	SET_TEXT_FONT(font_options);
 	SET_TEXT_COLOUR(optiontext.R, optiontext.G, optiontext.B, optiontext.A);
-	const bool isSelectedOption = Menu::usingMouseInput
-		? Menu::currentOptionCount == MouseSupport::mouseSelectedOptionIndex
-		: Menu::currentOptionCount == Menu::selectedOptionIndex;
-	if (isSelectedOption)
+	if (Menu::usingMouseInput ? Menu::currentOptionCount == MouseSupport::mouseSelectedOptionIndex : Menu::currentOptionCount == Menu::selectedOptionIndex)
 	{
 		if (font_selection == 2 || font_selection == 7) tempChar = "  ~b~=="; // Font unsafe
 		else tempChar = "  ~b~>"; // Font safe
@@ -1367,11 +1355,6 @@ void AddOption(std::string text, bool& option_code_bool, void(&callback)(), int 
 		if (!gxt)
 			text += tempChar;
 	}
-	const int unicodeFont = isSelectedOption ? font_selection : font_options;
-	const RGBA& unicodeColour = isSelectedOption ? selectedtext : optiontext;
-	const float unicodeScale = unicodeFont == 0 ? 0.33f : 0.4f;
-	UnicodeTextRenderer::SetStyle(Vector2(unicodeScale, unicodeScale), Menu::centerOptionText, false,
-		Menu::optionTextStroke, unicodeColour);
 	if (gxt)
 	{
 		if (Menu::centerOptionText)
@@ -1520,8 +1503,6 @@ void AddBreak(std::string text)
 	}
 
 	text = Language::TranslateToSelected(text);
-	UnicodeTextRenderer::SetStyle(Vector2(0.4f, 0.4f), Menu::centerBreakText, false,
-		Menu::optionTextStroke, optionbreaks);
 
 	if (Menu::centerBreakText)
 	{
