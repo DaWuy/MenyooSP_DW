@@ -103,6 +103,9 @@ void MenuConfig::ConfigRead()
 	checkSelfDeathModel = ini.GetBoolValue(section_settings.c_str(), "DeathModelReset", checkSelfDeathModel);
 	menuPos.x = ini.GetDoubleValue(section_settings.c_str(), "menuPosX", (menuPos.x + 0.0598f) * 100); menuPos.x = menuPos.x / 100 - 0.0598f;
 	menuPos.y = ini.GetDoubleValue(section_settings.c_str(), "menuPosY", (menuPos.y + 0.074f) * 100); menuPos.y = menuPos.y / 100 - 0.074f;
+	menuTextScalePercent = static_cast<int>(ini.GetLongValue(section_settings.c_str(), "menuTextScalePercent", menuTextScalePercent));
+	if (menuTextScalePercent < 50) menuTextScalePercent = 50;
+	if (menuTextScalePercent > 150) menuTextScalePercent = 150;
 	Menu::enableGlareEffect = ini.GetBoolValue(section_settings.c_str(), "Titlebox_Globe", Menu::enableGlareEffect);
 	Menu::centerTitleText = ini.GetBoolValue(section_settings.c_str(), "centre_title", Menu::centerTitleText);
 	Menu::centerOptionText = ini.GetBoolValue(section_settings.c_str(), "centre_options", Menu::centerOptionText);
@@ -369,6 +372,7 @@ void MenuConfig::SaveConfig()
 	ini.SetBoolValue(section_settings.c_str(), "DeathModelReset", checkSelfDeathModel);
 	ini.SetDoubleValue(section_settings.c_str(), "menuPosX", (menuPos.x + 0.0598f) * 100);
 	ini.SetDoubleValue(section_settings.c_str(), "menuPosY", (menuPos.y + 0.074f) * 100);
+	ini.SetLongValue(section_settings.c_str(), "menuTextScalePercent", menuTextScalePercent);
 	ini.SetBoolValue(section_settings.c_str(), "Titlebox_Globe", Menu::enableGlareEffect);
 	ini.SetBoolValue(section_settings.c_str(), "centre_title", Menu::centerTitleText);
 	ini.SetBoolValue(section_settings.c_str(), "centre_options", Menu::centerOptionText);

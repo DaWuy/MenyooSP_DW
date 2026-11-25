@@ -19,6 +19,7 @@ namespace sub
 		AddTitle("Settings");
 
 		AddOption("Keybinds", null, nullFunc, SUB::SETTINGS_KEYBINDS);
+		AddOptionDescription("Rebind the keys and buttons used by Menyoo.");
 		
 		bool bChangeLangPressed = false;
 		AddTexter("Language", 0, { Language::GetSelectedLangTitle() }, bChangeLangPressed);
@@ -31,7 +32,29 @@ namespace sub
 		AddOption("Menu Colours", null, nullFunc, SUB::SETTINGS_COLOURS);
 		AddOption("Menu Fonts", null, nullFunc, SUB::SETTINGS_FONTS);
 		AddOption("Menu Position", null, nullFunc, SUB::SETTINGS_MENUPOS);
-		AddOptionDescription("Rebind the keys and buttons used by Menyoo.");
+
+		static const std::vector<std::string> menuTextSizeOptions = []()
+		{
+			std::vector<std::string> values;
+			values.reserve(101);
+			for (int percent = 50; percent <= 150; ++percent)
+				values.push_back(std::to_string(percent) + "%");
+			return values;
+		}();
+		bool textSizeRight = false;
+		bool textSizeLeft = false;
+		AddTexter("Menu Text Size", menuTextScalePercent - 50, menuTextSizeOptions, null, textSizeRight, textSizeLeft);
+		if (textSizeRight && menuTextScalePercent < 150)
+		{
+			++menuTextScalePercent;
+			MenuConfig::RequestSave();
+		}
+		else if (textSizeLeft && menuTextScalePercent > 50)
+		{
+			--menuTextScalePercent;
+			MenuConfig::RequestSave();
+		}
+		AddOptionDescription("Adjusts only Menyoo text. Use Left/Right to change by 1%.");
 		AddToggle("Notification Background", MenuConfig::bShowNotificationBackground, MenuConfig::SaveConfig, MenuConfig::SaveConfig);
 		AddToggle("Mouse Support", Menu::usingMouseInput);
 		AddOptionDescription("Navigate the menu with the mouse. Right-click goes back.");

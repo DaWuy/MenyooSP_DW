@@ -73,6 +73,10 @@ extern bool menuHasNotOpened;
 extern Vector2 menuPos;
 extern Vector2 g_deltaCursorNormal;
 extern float currentOptionY;
+extern int menuTextScalePercent;
+
+// Applies the user-configurable Menyoo text size without changing GTA's own UI.
+float GetScaledMenuTextSize(float baseSize);
 
 extern INT8 font_title;
 extern INT8 font_options;
